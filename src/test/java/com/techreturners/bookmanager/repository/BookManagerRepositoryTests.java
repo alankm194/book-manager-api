@@ -34,7 +34,14 @@ public class BookManagerRepositoryTests {
 
         var bookById = bookManagerRepository.findById(book.getId());
         assertThat(bookById).isNotNull();
-
     }
+    @Test
+    public void testCreateAndDeleteBook() {
+        Book book = new Book(1L, "Book Three", "This is the description for Book Two", "Person Two", Genre.Fantasy);
+        bookManagerRepository.save(book);
+        bookManagerRepository.deleteById(book.getId());
+        assertThat(bookManagerRepository.existsById(book.getId())).isFalse();
+    }
+
 
 }

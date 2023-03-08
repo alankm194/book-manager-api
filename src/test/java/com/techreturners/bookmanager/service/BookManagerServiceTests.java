@@ -87,6 +87,6 @@ public class BookManagerServiceTests {
         var book = new Book(5L, "Book Five", "This is the description for Book Five", "Person Five", Genre.Fantasy);
         when(mockBookManagerRepository.save(book)).thenReturn(book);
         bookManagerServiceImpl.deleteBookById(bookId);
-        verify(mockBookManagerRepository, times(1)).deleteById(5L);
+        verify(mockBookManagerRepository, times(1)).deleteById(book.getId());
     }
 }
