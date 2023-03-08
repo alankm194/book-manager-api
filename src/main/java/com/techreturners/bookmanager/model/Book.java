@@ -12,6 +12,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(uniqueConstraints = { @UniqueConstraint(name = "UniqueTitleAndAuthor", columnNames = { "title", "author" }) })
 public class Book {
 
     @Id
@@ -30,4 +31,5 @@ public class Book {
 
     @Column
     Genre genre;
+
 }
