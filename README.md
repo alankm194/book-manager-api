@@ -54,3 +54,8 @@ to add in exception handling to the project?
 - Clue 2: What if someone wants to find a book by an ID that doesn't yet exist? 
   How can we improve the API by handling errors gracefully and show a helpful message to the client?
   
+## Assumptions
+
+Deleting a book successfully results in HTTP status 200
+
+Deleting a book that doesn't exist results in HTTP status 404 
