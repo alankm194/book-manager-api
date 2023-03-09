@@ -1,7 +1,7 @@
 package com.techreturners.bookmanager.service;
 
-import com.techreturners.bookmanager.exceptions.AlreadyExistsException;
-import com.techreturners.bookmanager.exceptions.NotFoundException;
+import com.techreturners.bookmanager.exceptions.BookAlreadyExistsException;
+import com.techreturners.bookmanager.exceptions.BookNotFoundException;
 import com.techreturners.bookmanager.model.Book;
 import com.techreturners.bookmanager.model.Genre;
 
@@ -98,7 +98,7 @@ public class BookManagerServiceTests {
     void testBookThatAlreadyExists_ThrowsException() {
         var book = new Book(5L, "Book Five", "This is the description for Book Five", "Person Five", Genre.Fantasy);
         when(mockBookManagerRepository.isUniqueBook(book.getAuthor(), book.getTitle())).thenReturn(false);
-        AlreadyExistsException thrown = Assertions.assertThrows(AlreadyExistsException.class, () ->
+        BookAlreadyExistsException thrown = Assertions.assertThrows(BookAlreadyExistsException.class, () ->
             bookManagerServiceImpl.insertBook(book));
 
         Assertions.assertEquals(String.format("title %s with author %s already exists", book.getTitle(), book.getAuthor()), thrown.getMessage());
@@ -107,7 +107,7 @@ public class BookManagerServiceTests {
 
     @Test
     void testFindingBookThatDoesntExist_throwsException() {
-        NotFoundException thrown = Assertions.assertThrows(NotFoundException.class, () ->
+        BookNotFoundException thrown = Assertions.assertThrows(BookNotFoundException.class, () ->
                 bookManagerServiceImpl.getBookById(34343L));
 
         Assertions.assertEquals("Book ID not found", thrown.getMessage());
@@ -117,7 +117,7 @@ public class BookManagerServiceTests {
     @Test
     void testUpdatingBookThatDoesntExist_throwsException() {
         var book = new Book(5L, "Book Five", "This is the description for Book Five", "Person Five", Genre.Fantasy);
-        NotFoundException thrown = Assertions.assertThrows(NotFoundException.class, () ->
+        BookNotFoundException thrown = Assertions.assertThrows(BookNotFoundException.class, () ->
                 bookManagerServiceImpl.updateBookById(book.getId(), book));
 
         Assertions.assertEquals("Book ID not found", thrown.getMessage());

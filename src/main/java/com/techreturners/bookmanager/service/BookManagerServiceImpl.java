@@ -1,7 +1,7 @@
 package com.techreturners.bookmanager.service;
 
-import com.techreturners.bookmanager.exceptions.AlreadyExistsException;
-import com.techreturners.bookmanager.exceptions.NotFoundException;
+import com.techreturners.bookmanager.exceptions.BookAlreadyExistsException;
+import com.techreturners.bookmanager.exceptions.BookNotFoundException;
 import com.techreturners.bookmanager.model.Book;
 import com.techreturners.bookmanager.repository.BookManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +26,20 @@ public class BookManagerServiceImpl implements BookManagerService {
     @Override
     public Book insertBook(Book book) {
         if (!bookManagerRepository.isUniqueBook(book.getAuthor(), book.getTitle())) {
-            throw new AlreadyExistsException(String.format("title %s with author %s already exists", book.getTitle(), book.getAuthor()));
+            throw new BookAlreadyExistsException(String.format("title %s with author %s already exists", book.getTitle(), book.getAuthor()));
         }
         return bookManagerRepository.save(book);
     }
 
     @Override
     public Book getBookById(Long id) {
-        return bookManagerRepository.findById(id).orElseThrow(() -> new NotFoundException("Book ID not found"));
+        return bookManagerRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book ID not found"));
     }
 
     //User Story 4 - Update Book By Id Solution
     @Override
     public void updateBookById(Long id, Book book) {
-        Book retrievedBook = bookManagerRepository.findById(id).orElseThrow(() -> new NotFoundException("Book ID not found"));
+        Book retrievedBook = bookManagerRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book ID not found"));
 
         retrievedBook.setTitle(book.getTitle());
         retrievedBook.setDescription(book.getDescription());

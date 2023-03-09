@@ -11,9 +11,9 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionResolver {
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(BookNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleNotFoundException(NotFoundException e ) {
+    public Map<String, String> handleNotFoundException(BookNotFoundException e ) {
         Map<String, String> response = new HashMap<>();
         response.put("status", "404");
         response.put("message", e.getLocalizedMessage());
@@ -21,9 +21,9 @@ public class ExceptionResolver {
     }
 
 
-    @ExceptionHandler(AlreadyExistsException.class)
+    @ExceptionHandler(BookAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handleAlreadyExistsException(AlreadyExistsException e) {
+    public Map<String, String> handleAlreadyExistsException(BookAlreadyExistsException e) {
         Map<String, String> response = new HashMap<>();
         response.put("status", "409");
         response.put("message", e.getLocalizedMessage());
