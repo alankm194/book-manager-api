@@ -39,7 +39,7 @@ public class BookManagerServiceImpl implements BookManagerService {
     //User Story 4 - Update Book By Id Solution
     @Override
     public void updateBookById(Long id, Book book) {
-        Book retrievedBook = bookManagerRepository.findById(id).get();
+        Book retrievedBook = bookManagerRepository.findById(id).orElseThrow(() -> new NotFoundException("Book ID not found"));
 
         retrievedBook.setTitle(book.getTitle());
         retrievedBook.setDescription(book.getDescription());

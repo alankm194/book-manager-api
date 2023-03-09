@@ -112,7 +112,6 @@ public class BookManagerControllerTests {
 
     @Test
     public void testDeleteMappingDeletesBook() throws Exception {
-
         Book book = new Book(4L, "Fabulous Four", "This is the description for the Fabulous Four", "Person Four", Genre.Fantasy);
         this.mockMvcController.perform(
                         MockMvcRequestBuilders.delete("/api/v1/book/" + book.getId())

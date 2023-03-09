@@ -113,4 +113,13 @@ public class BookManagerServiceTests {
         Assertions.assertEquals("Book ID not found", thrown.getMessage());
 
     }
+
+    @Test
+    void testUpdatingBookThatDoesntExist_throwsException() {
+        var book = new Book(5L, "Book Five", "This is the description for Book Five", "Person Five", Genre.Fantasy);
+        NotFoundException thrown = Assertions.assertThrows(NotFoundException.class, () ->
+                bookManagerServiceImpl.updateBookById(book.getId(), book));
+
+        Assertions.assertEquals("Book ID not found", thrown.getMessage());
+    }
 }
