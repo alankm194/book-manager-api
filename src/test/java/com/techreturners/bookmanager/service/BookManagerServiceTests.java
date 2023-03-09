@@ -122,4 +122,12 @@ public class BookManagerServiceTests {
 
         Assertions.assertEquals("Book ID not found", thrown.getMessage());
     }
+
+    @Test
+    void testDeletingBookThatDoesntExist_throwsException() {
+        BookNotFoundException thrown = Assertions.assertThrows(BookNotFoundException.class, () ->
+                bookManagerServiceImpl.deleteBookById(34343434L));
+
+        Assertions.assertEquals("Book with ID 34343434 is not found", thrown.getMessage());
+    }
 }
