@@ -41,7 +41,6 @@ public class BookManagerRepositoryTests {
         Book book = new Book(1L, "Book Four", "This is the description for Book Two", "Person Four", Genre.Fantasy);
         bookManagerRepository.save(book);
         bookManagerRepository.deleteById(book.getId());
-        bookManagerRepository.existsById(book.getId());
         assertThat(bookManagerRepository.existsById(book.getId())).isFalse();
     }
 
