@@ -89,7 +89,7 @@ public class BookManagerServiceTests {
     void testDeleteABook() {
         Long bookId = 5L;
         var book = new Book(5L, "Book Five", "This is the description for Book Five", "Person Five", Genre.Fantasy);
-        when(mockBookManagerRepository.save(book)).thenReturn(book);
+        when(mockBookManagerRepository.existsById(book.getId())).thenReturn(true);
         bookManagerServiceImpl.deleteBookById(bookId);
         verify(mockBookManagerRepository, times(1)).deleteById(book.getId());
     }
