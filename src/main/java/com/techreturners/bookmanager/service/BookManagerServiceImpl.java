@@ -26,7 +26,7 @@ public class BookManagerServiceImpl implements BookManagerService {
     @Override
     public Book insertBook(Book book) {
         if (!bookManagerRepository.isUniqueBook(book.getAuthor(), book.getTitle())) {
-            throw new BookAlreadyExistsException(String.format("title %s with author %s already exists", book.getTitle(), book.getAuthor()));
+            throw new BookAlreadyExistsException(book.getTitle(), book.getAuthor());
         }
         return bookManagerRepository.save(book);
     }

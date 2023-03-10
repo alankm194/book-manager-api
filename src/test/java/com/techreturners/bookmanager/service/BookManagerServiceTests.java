@@ -101,7 +101,7 @@ public class BookManagerServiceTests {
         BookAlreadyExistsException thrown = Assertions.assertThrows(BookAlreadyExistsException.class, () ->
             bookManagerServiceImpl.insertBook(book));
 
-        Assertions.assertEquals(String.format("title %s with author %s already exists", book.getTitle(), book.getAuthor()), thrown.getMessage());
+        Assertions.assertEquals(String.format("Book with title %s and author %s already exists", book.getTitle(), book.getAuthor()), thrown.getMessage());
         verify(mockBookManagerRepository, times(0)).save(book);
     }
 
@@ -110,7 +110,7 @@ public class BookManagerServiceTests {
         BookNotFoundException thrown = Assertions.assertThrows(BookNotFoundException.class, () ->
                 bookManagerServiceImpl.getBookById(34343L));
 
-        Assertions.assertEquals("Book ID not found", thrown.getMessage());
+        Assertions.assertEquals("Book with ID 34343 is not found", thrown.getMessage());
 
     }
 
@@ -120,7 +120,7 @@ public class BookManagerServiceTests {
         BookNotFoundException thrown = Assertions.assertThrows(BookNotFoundException.class, () ->
                 bookManagerServiceImpl.updateBookById(book.getId(), book));
 
-        Assertions.assertEquals("Book ID not found", thrown.getMessage());
+        Assertions.assertEquals("Book with ID 5 is not found", thrown.getMessage());
     }
 
     @Test

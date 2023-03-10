@@ -1,6 +1,7 @@
 package com.techreturners.bookmanager.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techreturners.bookmanager.exceptions.BookAlreadyExistsException;
 import com.techreturners.bookmanager.exceptions.BookNotFoundException;
 import com.techreturners.bookmanager.exceptions.ExceptionResolver;
 import com.techreturners.bookmanager.model.Book;
@@ -142,5 +143,51 @@ public class BookManagerControllerTests {
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookNotFoundException))
                 .andExpect(result -> assertEquals("Book with ID 9999 is not found" ,result.getResolvedException().getMessage()));
 
+    }
+
+    @Test
+    public void testDeleteMapping_whenBookIdIsNotFound_ThrowsException() throws Exception{
+        Long bookId = 9_999L;
+        doThrow(new BookNotFoundException(bookId)).when(mockBookManagerServiceImpl).deleteBookById(bookId);
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.delete("/api/v1/book/" + bookId )
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookNotFoundException))
+                .andExpect(result -> assertEquals("Book with ID 9999 is not found" ,result.getResolvedException().getMessage()));
+
+    }
+
+    @Test
+    public void testUpdateMapping_whenBookIdIsNotFound_ThrowsException() throws Exception{
+        Long bookId = 9_999L;
+        Book book = new Book(bookId, "Fabulous Four", "This is the description for the Fabulous Four", "Person Four", Genre.Fantasy);
+
+        doThrow(new BookNotFoundException(bookId)).when(mockBookManagerServiceImpl).updateBookById(bookId, book);
+
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.put("/api/v1/book/" + bookId )
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(book)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookNotFoundException))
+                .andExpect(result -> assertEquals("Book with ID 9999 is not found" ,result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void testPostMapping_WhenAddingSameBook_ThrowsException() throws Exception {
+        Long bookId = 9_999L;
+        Book book = new Book(bookId, "Fabulous Four", "This is the description for the Fabulous Four", "Person Four", Genre.Fantasy);
+
+        when(mockBookManagerServiceImpl.insertBook(book)).thenThrow(new BookAlreadyExistsException(book.getTitle(), book.getAuthor()));
+
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.post("/api/v1/book/")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(book)))
+                .andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookAlreadyExistsException))
+                .andExpect(result -> assertEquals("Book with title Fabulous Four and author Person Four already exists"
+                        ,result.getResolvedException().getMessage()));
     }
 }

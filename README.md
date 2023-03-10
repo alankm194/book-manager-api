@@ -58,4 +58,10 @@ to add in exception handling to the project?
 
 Deleting a book successfully results in HTTP status 200
 
-Deleting a book that doesn't exist results in HTTP status 404 
+Deleting a book that doesn't exist results in HTTP status 404
+
+Update, Delete and Get books that don't exist results in 404.
+
+Books that are the same are defined as same author and same title. 
+
+Books that are being added that already exist returns HTTP status 409
