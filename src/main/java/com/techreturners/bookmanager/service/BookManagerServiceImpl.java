@@ -33,13 +33,13 @@ public class BookManagerServiceImpl implements BookManagerService {
 
     @Override
     public Book getBookById(Long id) {
-        return bookManagerRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book ID not found"));
+        return bookManagerRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
 
     //User Story 4 - Update Book By Id Solution
     @Override
     public void updateBookById(Long id, Book book) {
-        Book retrievedBook = bookManagerRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book ID not found"));
+        Book retrievedBook = bookManagerRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
 
         retrievedBook.setTitle(book.getTitle());
         retrievedBook.setDescription(book.getDescription());
@@ -53,7 +53,7 @@ public class BookManagerServiceImpl implements BookManagerService {
     @Override
     public void deleteBookById(Long id) {
         if (!bookManagerRepository.existsById(id))  {
-            throw new BookNotFoundException(String.format("Book with ID %d is not found", id));
+            throw new BookNotFoundException(id);
         }
         bookManagerRepository.deleteById(id);
     }

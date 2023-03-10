@@ -1,6 +1,8 @@
 package com.techreturners.bookmanager.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techreturners.bookmanager.exceptions.BookNotFoundException;
+import com.techreturners.bookmanager.exceptions.ExceptionResolver;
 import com.techreturners.bookmanager.model.Book;
 import com.techreturners.bookmanager.model.Genre;
 import com.techreturners.bookmanager.service.BookManagerServiceImpl;
@@ -20,6 +22,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc
@@ -37,9 +41,14 @@ public class BookManagerControllerTests {
 
     private ObjectMapper mapper;
 
+    @Autowired
+    private ExceptionResolver exceptionResolver;
+
     @BeforeEach
     public void setup(){
-        mockMvcController = MockMvcBuilders.standaloneSetup(bookManagerController).build();
+        mockMvcController = MockMvcBuilders.standaloneSetup(bookManagerController)
+                .setControllerAdvice(exceptionResolver)
+                .build();
         mapper = new ObjectMapper();
     }
 
@@ -120,5 +129,18 @@ public class BookManagerControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         verify(mockBookManagerServiceImpl, times(1)).deleteBookById(book.getId());
+    }
+
+    @Test
+    public void testGetMapping_whenBookIdIsNotFound_ThrowsException() throws Exception{
+        long bookId = 9_999L;
+        when(mockBookManagerServiceImpl.getBookById(bookId)).thenThrow(new BookNotFoundException(bookId));
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.get("/api/v1/book/" + bookId )
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookNotFoundException))
+                .andExpect(result -> assertEquals("Book with ID 9999 is not found" ,result.getResolvedException().getMessage()));
+
     }
 }
